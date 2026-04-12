@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glimmer Bienestar Íntimo & Cuidado Corporal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+    
+    <!-- Fuentes elegantes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'glimmer-black': '#0a0a0a',
+                        'glimmer-charcoal': '#1a1a1a',
+                        'glimmer-burgundy': '#722f37',
+                        'glimmer-burgundy-light': '#8b3a44',
+                        'glimmer-gold': '#d4af37',
+                        'glimmer-gold-light': '#e5c158',
+                        'glimmer-rose': '#c9a9a6',
+                        'glimmer-pearl': '#f5f0eb',
+                        'glimmer-champagne': '#f7e7ce',
+                    },
+                    fontFamily: {
+                        'serif': ['Cormorant Garamond', 'serif'],
+                        'sans': ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0a0a0a;
+            color: #f5f0eb;
+        }
+        
+        .font-serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        
+        .glass {
+            background: rgba(26, 26, 26, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .glass-light {
+            background: rgba(245, 240, 235, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+        }
+        
+        .gradient-shift {
+            background-size: 200% 200%;
+            animation: gradientMove 8s ease infinite;
+        }
+        
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .glow-gold {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+        }
+        
+        .glow-gold:hover {
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+        }
+        
+        .text-gradient-gold {
+            background: linear-gradient(135deg, #d4af37 0%, #f7e7ce 50%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .input-elegant {
+            background: rgba(245, 240, 235, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .input-elegant:focus {
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+            outline: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #722f37 0%, #8b3a44 100%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(114, 47, 55, 0.4);
+        }
+        
+        .card-elegant {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-elegant:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #722f37;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b3a44;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(114, 47, 55, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+        }
+        
+        .loading-spinner {
+            border: 2px solid rgba(212, 175, 55, 0.1);
+            border-left-color: #d4af37;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-glimmer-black min-h-screen relative overflow-x-hidden">
+    <div class="bg-particles"></div>
+    <div id="root" class="relative z-10"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback } = React;
+        const { createClient } = supabase;
+
+        // ========================================
+        // CONFIGURACIÓN DE SUPABASE
+        // ========================================
+        // REEMPLAZA ESTOS VALORES CON LOS DE TU PROYECTO SUPABASE
+        const SUPABASE_URL = 'https://ybcrzlwgbmovybpilwqt.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InliY3J6bHdnYm1vdnlicGlsd3F0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5NDQ2MDUsImV4cCI6MjA5MTUyMDYwNX0.9INc47uEqmzbrCsrLW8fMqaZCqefvrtXCX1L0v91hpM';
+        
+        // Inicializar cliente Supabase
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let supabaseConfigured = false;
+        
+        // Verificar configuración
+        if (SUPABASE_URL !== 'https://tu-proyecto.supabase.co' && SUPABASE_ANON_KEY !== 'tu-anon-key-aqui') {
+            supabaseConfigured = true;
+            console.log("✅ Supabase configurado correctamente");
+        } else {
+            console.log("⚠️ Supabase no configurado - usando localStorage");
+        }
+
+        const formatearMoneda = (valor) => {
+            return new Intl.NumberFormat('es-CO', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(valor);
+        };
+
+        function InventarioGlimmer() {
+            const [productos, setProductos] = useState([]);
+            const [mostrarFormulario, setMostrarFormulario] = useState(false);
+            const [productoEditando, setProductoEditando] = useState(null);
+            const [busqueda, setBusqueda] = useState('');
+            const [filtroCategoria, setFiltroCategoria] = useState('todas');
+            const [filtroStock, setFiltroStock] = useState('todos');
+            const [vistaActual, setVistaActual] = useState('productos');
+            const [usuarioAutenticado, setUsuarioAutenticado] = useState(null);
+            const [nombreUsuario, setNombreUsuario] = useState('');
+            const [contrasena, setContrasena] = useState('');
+            const [errorLogin, setErrorLogin] = useState('');
+            const [transacciones, setTransacciones] = useState([]);
+            const [mostrarFormTransaccion, setMostrarFormTransaccion] = useState(false);
+            const [transaccionEditando, setTransaccionEditando] = useState(null);
+            const [filtroTipoTransaccion, setFiltroTipoTransaccion] = useState('todas');
+            const [filtroFechaDesde, setFiltroFechaDesde] = useState('');
+            const [filtroFechaHasta, setFiltroFechaHasta] = useState('');
+            const [cierresMensuales, setCierresMensuales] = useState([]);
+            const [mostrarCierres, setMostrarCierres] = useState(false);
+            const [menuMobile, setMenuMobile] = useState(false);
+            const [cargando, setCargando] = useState(true);
+            const [errorConexion, setErrorConexion] = useState(null);
+
+            const usuarios = {
+                'Veronica': '3003',
+                'Juan jose': '0604'
+            };
+
+            // ========================================
+            // FUNCIONES SUPABASE - PRODUCTOS
+            // ========================================
+            
+            const cargarProductos = useCallback(async () => {
+                if (!supabaseConfigured) return;
+                
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('productos')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+                    
+                    if (error) throw error;
+                    
+                    if (data) {
+                        // Transformar datos de Supabase al formato de la app
+                        const productosFormateados = data.map(p => ({
+                            id: p.id,
+                            nombre: p.nombre,
+                            codigo: p.codigo,
+                            categoria: p.categoria,
+                            precio: p.precio,
+                            costo: p.costo,
+                            stock: p.stock,
+                            stockMinimo: p.stock_minimo,
+                            proveedor: p.proveedor || '',
+                            ubicacion: p.ubicacion || '',
+                            sabor: p.sabor || '',
+                            material: p.material || '',
+                            talla: p.talla || '',
+                            descripcion: p.descripcion || '',
+                            fechaCreacion: p.created_at,
+                            fechaActualizacion: p.updated_at
+                        }));
+                        setProductos(productosFormateados);
+                    }
+                } catch (err) {
+                    console.error("Error cargando productos:", err);
+                    setErrorConexion("Error al cargar productos de Supabase");
+                }
+            }, []);
+
+            const guardarProducto = async (producto) => {
+                if (!supabaseConfigured) return false;
+                
+                try {
+                    const datosSupabase = {
+                        nombre: producto.nombre,
+                        codigo: producto.codigo,
+                        categoria: producto.categoria,
+                        precio: producto.precio,
+                        costo: producto.costo,
+                        stock: producto.stock,
+                        stock_minimo: producto.stockMinimo,
+                        proveedor: producto.proveedor,
+                        ubicacion: producto.ubicacion,
+                        sabor: producto.sabor,
+                        material: producto.material,
+                        talla: producto.talla,
+                        descripcion: producto.descripcion,
+                        updated_at: new Date().toISOString()
+                    };
+
+                    if (productoEditando) {
+                        // Actualizar
+                        const { error } = await supabaseClient
+                            .from('productos')
+                            .update(datosSupabase)
+                            .eq('id', producto.id);
+                        
+                        if (error) throw error;
+                    } else {
+                        // Insertar nuevo
+                        datosSupabase.created_at = new Date().toISOString();
+                        const { error } = await supabaseClient
+                            .from('productos')
+                            .insert([datosSupabase]);
+                        
+                        if (error) throw error;
+                    }
+                    
+                    await cargarProductos();
+                    return true;
+                } catch (err) {
+                    console.error("Error guardando producto:", err);
+                    alert("Error al guardar en Supabase: " + err.message);
+                    return false;
+                }
+            };
+
+            const eliminarProductoSupabase = async (id) => {
+                if (!supabaseConfigured) return false;
+                
+                try {
+                    const { error } = await supabaseClient
+                        .from('productos')
+                        .delete()
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                    
+                    await cargarProductos();
+                    return true;
+                } catch (err) {
+                    console.error("Error eliminando producto:", err);
+                    alert("Error al eliminar: " + err.message);
+                    return false;
+                }
+            };
+
+            const actualizarStockSupabase = async (id, nuevoStock) => {
+                if (!supabaseConfigured) return false;
+                
+                try {
+                    const { error } = await supabaseClient
+                        .from('productos')
+                        .update({ 
+                            stock: nuevoStock,
+                            updated_at: new Date().toISOString()
+                        })
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                    
+                    await cargarProductos();
+                    return true;
+                } catch (err) {
+                    console.error("Error actualizando stock:", err);
+                    return false;
+                }
+            };
+
+            // ========================================
+            // FUNCIONES SUPABASE - TRANSACCIONES
+            // ========================================
+            
+            const cargarTransacciones = useCallback(async () => {
+                if (!supabaseConfigured) return;
+                
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('transacciones')
+                        .select('*')
+                        .order('fecha', { ascending: false });
+                    
+                    if (error) throw error;
+                    
+                    if (data) {
+                        const transaccionesFormateadas = data.map(t => ({
+                            id: t.id,
+                            tipo: t.tipo,
+                            categoria: t.categoria,
+                            monto: t.monto,
+                            descripcion: t.descripcion,
+                            fecha: t.fecha,
+                            metodoPago: t.metodo_pago || '',
+                            referencia: t.referencia || '',
+                            cliente: t.cliente || '',
+                            productoId: t.producto_id ? String(t.producto_id) : '',
+                            fechaCreacion: t.created_at
+                        }));
+                        setTransacciones(transaccionesFormateadas);
+                    }
+                } catch (err) {
+                    console.error("Error cargando transacciones:", err);
+                }
+            }, []);
+
+            const guardarTransaccion = async (transaccion) => {
+                if (!supabaseConfigured) return false;
+                
+                try {
+                    const datosSupabase = {
+                        tipo: transaccion.tipo,
+                        categoria: transaccion.categoria,
+                        monto: transaccion.monto,
+                        descripcion: transaccion.descripcion,
+                        fecha: transaccion.fecha,
+                        metodo_pago: transaccion.metodoPago,
+                        referencia: transaccion.referencia,
+                        cliente: transaccion.cliente,
+                        producto_id: transaccion.productoId || null,
+                        updated_at: new Date().toISOString()
+                    };
+
+                    if (transaccionEditando) {
+                        const { error } = await supabaseClient
+                            .from('transacciones')
+                            .update(datosSupabase)
+                            .eq('id', transaccion.id);
+                        
+                        if (error) throw error;
+                    } else {
+                        datosSupabase.created_at = new Date().toISOString();
+                        const { error } = await supabaseClient
+                            .from('transacciones')
+                            .insert([datosSupabase]);
+                        
+                        if (error) throw error;
+                    }
+                    
+                    await cargarTransacciones();
+                    return true;
+                } catch (err) {
+                    console.error("Error guardando transacción:", err);
+                    alert("Error al guardar transacción: " + err.message);
+                    return false;
+                }
+            };
+
+            const eliminarTransaccionSupabase = async (id) => {
+                if (!supabaseConfigured) return false;
+                
+                try {
+                    const { error } = await supabaseClient
+                        .from('transacciones')
+                        .delete()
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                    
+                    await cargarTransacciones();
+                    return true;
+                } catch (err) {
+                    console.error("Error eliminando transacción:", err);
+                    return false;
+                }
+            };
+
+            // ========================================
+            // FUNCIONES SUPABASE - CIERRES
+            // ========================================
+            
+            const cargarCierres = useCallback(async () => {
+                if (!supabaseConfigured) return;
+                
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('cierres_mensuales')
+                        .select('*')
+                        .order('fecha_cierre', { ascending: false });
+                    
+                    if (error) throw error;
+                    
+                    if (data) {
+                        const cierresFormateados = data.map(c => ({
+                            id: c.id,
+                            periodo: c.periodo,
+                            nombreMes: c.nombre_mes,
+                            fechaCierre: c.fecha_cierre,
+                            totalIngresos: c.total_ingresos,
+                            totalEgresos: c.total_egresos,
+                            utilidadNeta: c.utilidad_neta,
+                            cantidadTransacciones: c.cantidad_transacciones,
+                            transacciones: c.transacciones || [],
+                            ventasPorCategoria: c.ventas_por_categoria || {},
+                            productosMasVendidos: c.productos_mas_vendidos || []
+                        }));
+                        setCierresMensuales(cierresFormateados);
+                    }
+                } catch (err) {
+                    console.error("Error cargando cierres:", err);
+                }
+            }, []);
+
+            const guardarCierre = async (cierre) => {
+                if (!supabaseConfigured) return false;
+                
+                try {
+                    const datosSupabase = {
+                        periodo: cierre.periodo,
+                        nombre_mes: cierre.nombreMes,
+                        fecha_cierre: cierre.fechaCierre,
+                        total_ingresos: cierre.totalIngresos,
+                        total_egresos: cierre.totalEgresos,
+                        utilidad_neta: cierre.utilidadNeta,
+                        cantidad_transacciones: cierre.cantidadTransacciones,
+                        transacciones: cierre.transacciones,
+                        ventas_por_categoria: cierre.ventasPorCategoria,
+                        productos_mas_vendidos: cierre.productosMasVendidos,
+                        created_at: new Date().toISOString()
+                    };
+
+                    const { error } = await supabaseClient
+                        .from('cierres_mensuales')
+                        .insert([datosSupabase]);
+                    
+                    if (error) throw error;
+                    
+                    await cargarCierres();
+                    return true;
+                } catch (err) {
+                    console.error("Error guardando cierre:", err);
+                    alert("Error al guardar cierre: " + err.message);
+                    return false;
+                }
+            };
+
+            const limpiarTransaccionesSupabase = async () => {
+                if (!supabaseConfigured) return false;
+                
+                try {
+                    // Eliminar todas las transacciones
+                    const { error } = await supabaseClient
+                        .from('transacciones')
+                        .delete()
+                        .neq('id', 0); // Eliminar todas
+                    
+                    if (error) throw error;
+                    
+                    await cargarTransacciones();
+                    return true;
+                } catch (err) {
+                    console.error("Error limpiando transacciones:", err);
+                    return false;
+                }
+            };
+
+            // ========================================
+            // SUSCRIPCIONES EN TIEMPO REAL
+            // ========================================
+            
+            useEffect(() => {
+                if (!supabaseConfigured) {
+                    setCargando(false);
+                    return;
+                }
+
+                // Cargar datos iniciales
+                const cargarDatos = async () => {
+                    setCargando(true);
+                    await Promise.all([
+                        cargarProductos(),
+                        cargarTransacciones(),
+                        cargarCierres()
+                    ]);
+                    setCargando(false);
+                };
+                
+                cargarDatos();
+
+                // Suscribirse a cambios en productos
+                const productosSubscription = supabaseClient
+                    .channel('productos-changes')
+                    .on('postgres_changes', 
+                        { event: '*', schema: 'public', table: 'productos' },
+                        (payload) => {
+                            console.log('Cambio en productos:', payload);
+                            cargarProductos();
+                        }
+                    )
+                    .subscribe();
+
+                // Suscribirse a cambios en transacciones
+                const transaccionesSubscription = supabaseClient
+                    .channel('transacciones-changes')
+                    .on('postgres_changes',
+                        { event: '*', schema: 'public', table: 'transacciones' },
+                        (payload) => {
+                            console.log('Cambio en transacciones:', payload);
+                            cargarTransacciones();
+                        }
+                    )
+                    .subscribe();
+
+                // Suscribirse a cambios en cierres
+                const cierresSubscription = supabaseClient
+                    .channel('cierres-changes')
+                    .on('postgres_changes',
+                        { event: '*', schema: 'public', table: 'cierres_mensuales' },
+                        (payload) => {
+                            console.log('Cambio en cierres:', payload);
+                            cargarCierres();
+                        }
+                    )
+                    .subscribe();
+
+                return () => {
+                    productosSubscription.unsubscribe();
+                    transaccionesSubscription.unsubscribe();
+                    cierresSubscription.unsubscribe();
+                };
+            }, [cargarProductos, cargarTransacciones, cargarCierres]);
+
+            // ========================================
+            // LOCALSTORAGE COMO RESPALDO
+            // ========================================
+            
+            useEffect(() => {
+                if (!supabaseConfigured) {
+                    // Cargar desde localStorage si Supabase no está configurado
+                    try {
+                        const stored = localStorage.getItem('glimmer-productos');
+                        if (stored) setProductos(JSON.parse(stored));
+                        const storedTrans = localStorage.getItem('glimmer-transacciones');
+                        if (storedTrans) setTransacciones(JSON.parse(storedTrans));
+                        const storedCierres = localStorage.getItem('glimmer-cierres-mensuales');
+                        if (storedCierres) setCierresMensuales(JSON.parse(storedCierres));
+                    } catch (error) {
+                        console.log('Iniciando datos nuevos');
+                    }
+                    setCargando(false);
+                }
+            }, []);
+
+            // Guardar en localStorage como respaldo
+            useEffect(() => {
+                if (!supabaseConfigured) {
+                    localStorage.setItem('glimmer-productos', JSON.stringify(productos));
+                }
+            }, [productos]);
+
+            useEffect(() => {
+                if (!supabaseConfigured) {
+                    localStorage.setItem('glimmer-transacciones', JSON.stringify(transacciones));
+                }
+            }, [transacciones]);
+
+            useEffect(() => {
+                if (!supabaseConfigured) {
+                    localStorage.setItem('glimmer-cierres-mensuales', JSON.stringify(cierresMensuales));
+                }
+            }, [cierresMensuales]);
+
+            // ========================================
+            // AUTENTICACIÓN LOCAL
+            // ========================================
+            
+            useEffect(() => {
+                const sesionGuardada = localStorage.getItem('glimmer-sesion');
+                if (sesionGuardada) {
+                    setUsuarioAutenticado(sesionGuardada);
+                }
+            }, []);
+
+            const handleLogin = (e) => {
+                e.preventDefault();
+                setErrorLogin('');
+                if (usuarios[nombreUsuario] && usuarios[nombreUsuario] === contrasena) {
+                    setUsuarioAutenticado(nombreUsuario);
+                    localStorage.setItem('glimmer-sesion', nombreUsuario);
+                    setNombreUsuario('');
+                    setContrasena('');
+                } else {
+                    setErrorLogin('Credenciales incorrectas');
+                }
+            };
+
+            const handleLogout = () => {
+                if (confirm('¿Deseas cerrar tu sesión?')) {
+                    setUsuarioAutenticado(null);
+                    localStorage.removeItem('glimmer-sesion');
+                }
+            };
+
+            // ========================================
+            // FORMULARIOS Y ESTADOS
+            // ========================================
+            
+            const [formTransaccion, setFormTransaccion] = useState({
+                tipo: 'venta', categoria: '', monto: '', descripcion: '',
+                fecha: new Date().toISOString().split('T')[0], metodoPago: '',
+                referencia: '', cliente: '', productoId: ''
+            });
+
+            const [formulario, setFormulario] = useState({
+                nombre: '', codigo: '', categoria: '', precio: '', costo: '',
+                stock: '', stockMinimo: '', proveedor: '', ubicacion: '',
+                sabor: '', material: '', talla: '', descripcion: ''
+            });
+
+            const categorias = [
+                'Lubricantes', 'Juguetes Sexuales', 'Lencería', 'Aceites y Lociones',
+                'Productos con Feromonas', 'Estimulantes', 'Preservativos',
+                'Cuidado de la Piel', 'Cuidado Corporal', 'Cremas Hidratantes',
+                'Productos Faciales', 'Exfoliantes', 'Aceites Esenciales',
+                'Jabones Artesanales', 'Mascarillas', 'Sérum y Ampollas',
+                'Protección Solar', 'Cosméticos Íntimos', 'Accesorios', 'Otros'
+            ];
+
+            const categoriasGastos = [
+                'Compra de Inventario', 'Servicios Públicos', 'Arriendo/Alquiler',
+                'Salarios', 'Marketing y Publicidad', 'Transporte',
+                'Empaque y Envío', 'Mantenimiento', 'Impuestos', 'Otros Gastos'
+            ];
+
+            const metodosPago = [
+                'Efectivo', 'Tarjeta Débito', 'Tarjeta Crédito', 'Transferencia',
+                'Nequi', 'Daviplata', 'PayPal', 'Otro'
+            ];
+
+            // ========================================
+            // HANDLERS DE PRODUCTOS
+            // ========================================
+            
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                
+                const nuevoProducto = {
+                    ...formulario,
+                    id: productoEditando ? productoEditando.id : Date.now(),
+                    precio: parseFloat(formulario.precio) || 0,
+                    costo: parseFloat(formulario.costo) || 0,
+                    stock: parseInt(formulario.stock) || 0,
+                    stockMinimo: parseInt(formulario.stockMinimo) || 0,
+                    sabor: formulario.sabor || '',
+                    material: formulario.material || '',
+                    talla: formulario.talla || '',
+                    fechaCreacion: productoEditando ? productoEditando.fechaCreacion : new Date().toISOString(),
+                    fechaActualizacion: new Date().toISOString()
+                };
+
+                if (supabaseConfigured) {
+                    const exito = await guardarProducto(nuevoProducto);
+                    if (!exito) return;
+                } else {
+                    if (productoEditando) {
+                        setProductos(productos.map(p => p.id === productoEditando.id ? nuevoProducto : p));
+                    } else {
+                        setProductos([...productos, nuevoProducto]);
+                    }
+                }
+
+                resetFormulario();
+            };
+
+            const resetFormulario = () => {
+                setFormulario({
+                    nombre: '', codigo: '', categoria: '', precio: '', costo: '',
+                    stock: '', stockMinimo: '', proveedor: '', ubicacion: '',
+                    sabor: '', material: '', talla: '', descripcion: ''
+                });
+                setMostrarFormulario(false);
+                setProductoEditando(null);
+            };
+
+            const editarProducto = (producto) => {
+                setProductoEditando(producto);
+                setFormulario({...producto});
+                setMostrarFormulario(true);
+            };
+
+            const eliminarProducto = async (id) => {
+                if (confirm('¿Deseas eliminar este producto permanentemente?')) {
+                    if (supabaseConfigured) {
+                        const exito = await eliminarProductoSupabase(id);
+                        if (!exito) return;
+                    } else {
+                        setProductos(productos.filter(p => p.id !== id));
+                    }
+                }
+            };
+
+            const actualizarStock = async (id, cantidad) => {
+                const producto = productos.find(p => p.id === id);
+                if (!producto) return;
+                
+                const nuevoStock = Math.max(0, producto.stock + cantidad);
+                
+                if (supabaseConfigured) {
+                    await actualizarStockSupabase(id, nuevoStock);
+                } else {
+                    setProductos(productos.map(p => 
+                        p.id === id ? { ...p, stock: nuevoStock, fechaActualizacion: new Date().toISOString() } : p
+                    ));
+                }
+            };
+
+            // ========================================
+            // HANDLERS DE TRANSACCIONES
+            // ========================================
+            
+            const handleSubmitTransaccion = async (e) => {
+                e.preventDefault();
+                
+                const nuevaTransaccion = {
+                    ...formTransaccion,
+                    id: transaccionEditando ? transaccionEditando.id : Date.now(),
+                    monto: parseFloat(formTransaccion.monto) || 0,
+                    fechaCreacion: transaccionEditando ? transaccionEditando.fechaCreacion : new Date().toISOString()
+                };
+
+                if (!transaccionEditando && formTransaccion.tipo === 'venta' && formTransaccion.productoId) {
+                    await actualizarStock(parseInt(formTransaccion.productoId), -1);
+                }
+
+                if (supabaseConfigured) {
+                    const exito = await guardarTransaccion(nuevaTransaccion);
+                    if (!exito) return;
+                } else {
+                    if (transaccionEditando) {
+                        setTransacciones(transacciones.map(t => t.id === transaccionEditando.id ? nuevaTransaccion : t));
+                    } else {
+                        setTransacciones([...transacciones, nuevaTransaccion]);
+                    }
+                }
+
+                resetFormTransaccion();
+            };
+
+            const resetFormTransaccion = () => {
+                setFormTransaccion({
+                    tipo: 'venta', categoria: '', monto: '', descripcion: '',
+                    fecha: new Date().toISOString().split('T')[0], metodoPago: '',
+                    referencia: '', cliente: '', productoId: ''
+                });
+                setMostrarFormTransaccion(false);
+                setTransaccionEditando(null);
+            };
+
+            const editarTransaccion = (transaccion) => {
+                setTransaccionEditando(transaccion);
+                setFormTransaccion({...transaccion});
+                setMostrarFormTransaccion(true);
+            };
+
+            const eliminarTransaccion = async (id) => {
+                if (confirm('¿Deseas eliminar esta transacción?')) {
+                    const transaccion = transacciones.find(t => t.id === id);
+                    
+                    if (transaccion && transaccion.tipo === 'venta' && transaccion.productoId) {
+                        await actualizarStock(parseInt(transaccion.productoId), 1);
+                    }
+                    
+                    if (supabaseConfigured) {
+                        await eliminarTransaccionSupabase(id);
+                    } else {
+                        setTransacciones(transacciones.filter(t => t.id !== id));
+                    }
+                }
+            };
+
+            // ========================================
+            // CIERRE MENSUAL
+            // ========================================
+            
+            const realizarCierreMensual = async () => {
+                if (transacciones.length === 0) {
+                    alert('No hay transacciones para cerrar el mes.');
+                    return;
+                }
+
+                const ahora = new Date();
+                const mesActual = ahora.toISOString().slice(0, 7);
+                const nombreMes = ahora.toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
+
+                const cierreExistente = cierresMensuales.find(c => c.periodo === mesActual);
+                if (cierreExistente) {
+                    if (!confirm(`Ya existe un cierre para ${nombreMes}. ¿Deseas reemplazarlo?`)) return;
+                }
+
+                const mensaje = `¿Realizar cierre del mes de ${nombreMes}?\n\nSe guardarán todas las transacciones actuales.`;
+                
+                if (confirm(mensaje)) {
+                    const ingresos = transacciones.filter(t => t.tipo === 'venta' || t.tipo === 'ingreso').reduce((sum, t) => sum + t.monto, 0);
+                    const egresos = transacciones.filter(t => t.tipo === 'gasto' || t.tipo === 'compra').reduce((sum, t) => sum + t.monto, 0);
+                    
+                    const nuevoCierre = {
+                        id: Date.now(),
+                        periodo: mesActual,
+                        nombreMes: nombreMes,
+                        fechaCierre: new Date().toISOString(),
+                        totalIngresos: ingresos,
+                        totalEgresos: egresos,
+                        utilidadNeta: ingresos - egresos,
+                        cantidadTransacciones: transacciones.length,
+                        transacciones: [...transacciones],
+                        ventasPorCategoria: calcularVentasPorCategoria(transacciones),
+                        productosMasVendidos: calcularProductosMasVendidos(transacciones)
+                    };
+
+                    if (supabaseConfigured) {
+                        // Si existe, eliminar el anterior primero
+                        if (cierreExistente) {
+                            await supabaseClient
+                                .from('cierres_mensuales')
+                                .delete()
+                                .eq('periodo', mesActual);
+                        }
+                        
+                        const exito = await guardarCierre(nuevoCierre);
+                        if (!exito) return;
+                        
+                        // Limpiar transacciones de Supabase
+                        await limpiarTransaccionesSupabase();
+                    } else {
+                        if (cierreExistente) {
+                            setCierresMensuales(cierresMensuales.map(c => c.periodo === mesActual ? nuevoCierre : c));
+                        } else {
+                            setCierresMensuales([...cierresMensuales, nuevoCierre]);
+                        }
+                        setTransacciones([]);
+                    }
+                    
+                    alert(`✨ Cierre de ${nombreMes} realizado exitosamente\n\nIngresos: $${formatearMoneda(ingresos)}\nEgresos: $${formatearMoneda(egresos)}\nUtilidad: $${formatearMoneda(ingresos - egresos)}`);
+                }
+            };
+
+            const calcularVentasPorCategoria = (trans) => {
+                const ventasPorCat = {};
+                trans.filter(t => t.tipo === 'venta' || t.tipo === 'ingreso').forEach(t => {
+                    ventasPorCat[t.categoria] = (ventasPorCat[t.categoria] || 0) + t.monto;
+                });
+                return ventasPorCat;
+            };
+
+            const calcularProductosMasVendidos = (trans) => {
+                const conteo = {};
+                trans.filter(t => t.tipo === 'venta' && t.productoId).forEach(t => {
+                    const producto = productos.find(p => p.id === parseInt(t.productoId));
+                    if (producto) {
+                        if (!conteo[producto.nombre]) {
+                            conteo[producto.nombre] = { nombre: producto.nombre, cantidad: 0, total: 0 };
+                        }
+                        conteo[producto.nombre].cantidad += 1;
+                        conteo[producto.nombre].total += t.monto;
+                    }
+                });
+                return Object.values(conteo).sort((a, b) => b.cantidad - a.cantidad).slice(0, 10);
+            };
+
+            // ========================================
+            // FILTROS Y ESTADÍSTICAS
+            // ========================================
+            
+            const productosFiltrados = productos.filter(p => {
+                const matchBusqueda = (p.nombre || '').toLowerCase().includes(busqueda.toLowerCase()) ||
+                                     (p.codigo || '').toLowerCase().includes(busqueda.toLowerCase()) ||
+                                     (p.proveedor || '').toLowerCase().includes(busqueda.toLowerCase());
+                const matchCategoria = filtroCategoria === 'todas' || p.categoria === filtroCategoria;
+                const matchStock = filtroStock === 'todos' || 
+                                  (filtroStock === 'bajo' && p.stock <= p.stockMinimo) ||
+                                  (filtroStock === 'disponible' && p.stock > p.stockMinimo) ||
+                                  (filtroStock === 'agotado' && p.stock === 0);
+                return matchBusqueda && matchCategoria && matchStock;
+            });
+
+            const transaccionesFiltradas = transacciones.filter(t => {
+                const matchTipo = filtroTipoTransaccion === 'todas' || t.tipo === filtroTipoTransaccion;
+                const matchFecha = (!filtroFechaDesde || t.fecha >= filtroFechaDesde) &&
+                                  (!filtroFechaHasta || t.fecha <= filtroFechaHasta);
+                return matchTipo && matchFecha;
+            });
+
+            const stats = {
+                totalProductos: productos.length,
+                valorInventario: productos.reduce((sum, p) => sum + (p.precio * p.stock), 0),
+                stockBajo: productos.filter(p => p.stock <= p.stockMinimo && p.stock > 0).length,
+                agotados: productos.filter(p => p.stock === 0).length,
+                margenPromedio: productos.length > 0 
+                    ? productos.reduce((sum, p) => sum + ((p.precio - p.costo) / p.precio * 100), 0) / productos.length 
+                    : 0
+            };
+
+            const totalIngresos = transacciones.filter(t => t.tipo === 'venta' || t.tipo === 'ingreso').reduce((sum, t) => sum + t.monto, 0);
+            const totalEgresos = transacciones.filter(t => t.tipo === 'gasto' || t.tipo === 'compra').reduce((sum, t) => sum + t.monto, 0);
+            const utilidadNeta = totalIngresos - totalEgresos;
+            const ventasHoy = transacciones.filter(t => t.tipo === 'venta' && t.fecha === new Date().toISOString().split('T')[0]).reduce((sum, t) => sum + t.monto, 0);
+            const gastosHoy = transacciones.filter(t => (t.tipo === 'gasto' || t.tipo === 'compra') && t.fecha === new Date().toISOString().split('T')[0]).reduce((sum, t) => sum + t.monto, 0);
+            const mesActual = new Date().toISOString().slice(0, 7);
+            const ventasMes = transacciones.filter(t => t.tipo === 'venta' && t.fecha.startsWith(mesActual)).reduce((sum, t) => sum + t.monto, 0);
+            const gastosMes = transacciones.filter(t => (t.tipo === 'gasto' || t.tipo === 'compra') && t.fecha.startsWith(mesActual)).reduce((sum, t) => sum + t.monto, 0);
+
+            const statsFinancieras = {
+                totalIngresos, totalEgresos, utilidadNeta, ventasHoy, gastosHoy,
+                ventasMes, gastosMes, utilidadMes: ventasMes - gastosMes,
+                totalTransacciones: transacciones.length
+            };
+
+            // ========================================
+            // RENDERIZADO
+            // ========================================
+            
+            if (cargando) {
+                return (
+                    <div className="min-h-screen flex items-center justify-center">
+                        <div className="text-center">
+                            <div className="loading-spinner mx-auto mb-4"></div>
+                            <p className="text-glimmer-rose text-sm tracking-widest uppercase">Cargando Glimmer...</p>
+                        </div>
+                    </div>
+                );
+            }
+
+            if (!usuarioAutenticado) {
+                return (
+                    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-glimmer-charcoal via-glimmer-burgundy/20 to-glimmer-black gradient-shift opacity-90"></div>
+                        <div className="absolute top-20 left-20 w-72 h-72 bg-glimmer-burgundy rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+                        <div className="absolute bottom-20 right-20 w-96 h-96 bg-glimmer-gold rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+                        
+                        <div className="relative z-10 w-full max-w-md px-6">
+                            {!supabaseConfigured && (
+                                <div className="mb-4 glass rounded-lg p-4 border border-yellow-500/30 text-center">
+                                    <p className="text-yellow-500 text-xs uppercase tracking-widest mb-1">⚠️ Modo Local</p>
+                                    <p className="text-glimmer-rose text-xs">Configure Supabase para sincronización en tiempo real</p>
+                                </div>
+                            )}
+                            
+                            <div className="glass rounded-3xl p-8 md:p-12 shadow-2xl animate-fade-in">
+                                <div className="text-center mb-10">
+                                    <div className="inline-block mb-4">
+                                        <svg width="60" height="60" viewBox="0 0 60 60" fill="none" className="mx-auto">
+                                            <circle cx="30" cy="30" r="28" stroke="url(#gold-gradient)" strokeWidth="1.5" fill="none"/>
+                                            <path d="M30 15C30 15 20 25 20 35C20 42 25 47 30 47C35 47 40 42 40 35C40 25 30 15 30 15Z" fill="url(#gold-gradient)" opacity="0.8"/>
+                                            <defs>
+                                                <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                    <stop offset="0%" stopColor="#d4af37"/>
+                                                    <stop offset="50%" stopColor="#f7e7ce"/>
+                                                    <stop offset="100%" stopColor="#d4af37"/>
+                                                </linearGradient>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                    <h1 className="font-serif text-5xl font-light text-gradient-gold mb-2 tracking-wide">
+                                        Glimmer
+                                    </h1>
+                                    <p className="text-glimmer-rose text-sm tracking-[0.3em] uppercase font-light">
+                                        Bienestar Íntimo & Cuidado Corporal
+                                    </p>
+                                    <div className="mt-6 w-24 h-px bg-gradient-to-r from-transparent via-glimmer-gold to-transparent mx-auto"></div>
+                                </div>
+
+                                <form onSubmit={handleLogin} className="space-y-6">
+                                    <div className="space-y-2">
+                                        <label className="block text-xs uppercase tracking-widest text-glimmer-rose ml-1">
+                                            Usuario
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={nombreUsuario}
+                                            onChange={(e) => setNombreUsuario(e.target.value)}
+                                            required
+                                            className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl placeholder-gray-600"
+                                            placeholder="Ingresa tu nombre"
+                                            autoFocus
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="block text-xs uppercase tracking-widest text-glimmer-rose ml-1">
+                                            Contraseña
+                                        </label>
+                                        <input
+                                            type="password"
+                                            value={contrasena}
+                                            onChange={(e) => setContrasena(e.target.value)}
+                                            required
+                                            className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl placeholder-gray-600"
+                                            placeholder="••••••"
+                                        />
+                                    </div>
+
+                                    {errorLogin && (
+                                        <div className="bg-red-900/30 border border-red-500/30 text-red-300 px-4 py-3 rounded-lg text-sm text-center">
+                                            {errorLogin}
+                                        </div>
+                                    )}
+
+                                    <button
+                                        type="submit"
+                                        className="w-full btn-primary text-white py-4 rounded-lg font-medium tracking-wider uppercase text-sm mt-8 glow-gold"
+                                    >
+                                        Ingresar al Sistema
+                                    </button>
+                                </form>
+
+                                <div className="mt-8 text-center">
+                                    <p className="text-xs text-gray-600 font-light">
+                                        Sistema exclusivo para personal autorizado
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div className="text-center mt-8 opacity-40">
+                                <p className="font-serif italic text-glimmer-gold/50 text-sm">
+                                    "El lujo de cuidarte"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="min-h-screen bg-glimmer-black">
+                    <header className="glass sticky top-0 z-50 border-b border-glimmer-gold/10">
+                        <div className="container mx-auto px-4 py-4">
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-4">
+                                    <div className="hidden md:block">
+                                        <svg width="40" height="40" viewBox="0 0 60 60" fill="none">
+                                            <circle cx="30" cy="30" r="28" stroke="url(#gold-gradient)" strokeWidth="1" fill="none"/>
+                                            <path d="M30 15C30 15 20 25 20 35C20 42 25 47 30 47C35 47 40 42 40 35C40 25 30 15 30 15Z" fill="url(#gold-gradient)" opacity="0.6"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h1 className="font-serif text-2xl md:text-3xl text-gradient-gold font-light">
+                                            Glimmer
+                                        </h1>
+                                        <p className="text-xs text-glimmer-rose tracking-wider uppercase hidden md:block">
+                                            Sistema de Inventario & Ventas
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-4">
+                                    <div className="hidden md:flex items-center gap-3 glass-light px-4 py-2 rounded-full">
+                                        <div className={`w-2 h-2 rounded-full animate-pulse ${supabaseConfigured ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                                        <span className="text-xs text-glimmer-pearl/80">
+                                            {supabaseConfigured ? 'Sincronizado' : 'Modo Local'}
+                                        </span>
+                                        <span className="text-xs text-glimmer-rose border-l border-glimmer-gold/20 pl-3">{usuarioAutenticado}</span>
+                                    </div>
+                                    
+                                    <button
+                                        onClick={handleLogout}
+                                        className="text-xs uppercase tracking-wider text-glimmer-rose hover:text-glimmer-gold transition px-4 py-2 border border-glimmer-gold/20 rounded-lg hover:border-glimmer-gold/50"
+                                    >
+                                        Salir
+                                    </button>
+                                    
+                                    <button 
+                                        onClick={() => setMenuMobile(!menuMobile)}
+                                        className="md:hidden text-glimmer-pearl p-2"
+                                    >
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    <nav className={`${menuMobile ? 'block' : 'hidden'} md:block glass border-b border-glimmer-gold/10`}>
+                        <div className="container mx-auto px-4 py-4">
+                            <div className="flex flex-col md:flex-row gap-2 md:gap-4">
+                                {[
+                                    { id: 'productos', label: 'Productos', icon: '✦' },
+                                    { id: 'dashboard', label: 'Dashboard', icon: '◈' },
+                                    { id: 'contabilidad', label: 'Contabilidad', icon: '◉' },
+                                    { id: 'cierres', label: 'Cierres', icon: '◆' }
+                                ].map((item) => (
+                                    <button
+                                        key={item.id}
+                                        onClick={() => { setVistaActual(item.id); setMenuMobile(false); }}
+                                        className={`px-6 py-3 rounded-lg font-light tracking-wide transition-all duration-300 flex items-center gap-2 ${
+                                            vistaActual === item.id 
+                                                ? 'bg-glimmer-burgundy/30 text-glimmer-gold border border-glimmer-gold/30' 
+                                                : 'text-glimmer-pearl/70 hover:text-glimmer-pearl hover:bg-white/5'
+                                        }`}
+                                    >
+                                        <span className="opacity-60">{item.icon}</span>
+                                        {item.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </nav>
+
+                    <main className="container mx-auto px-4 py-8">
+                        {errorConexion && (
+                            <div className="mb-6 glass rounded-lg p-4 border border-red-500/30 text-center">
+                                <p className="text-red-400 text-sm">{errorConexion}</p>
+                                <button onClick={() => window.location.reload()} className="mt-2 text-xs text-glimmer-gold hover:underline">
+                                    Reintentar conexión
+                                </button>
+                            </div>
+                        )}
+
+                        {vistaActual === 'dashboard' && (
+                            <div className="space-y-6 animate-fade-in">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    <div className="glass rounded-2xl p-6 card-elegant border-l-2 border-glimmer-gold">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <p className="text-glimmer-rose text-xs uppercase tracking-widest mb-2">Total Productos</p>
+                                                <p className="text-3xl font-serif text-glimmer-pearl">{stats.totalProductos}</p>
+                                            </div>
+                                            <div className="text-glimmer-gold/30 text-3xl">✦</div>
+                                        </div>
+                                    </div>
+
+                                    <div className="glass rounded-2xl p-6 card-elegant border-l-2 border-green-500">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <p className="text-glimmer-rose text-xs uppercase tracking-widest mb-2">Valor Inventario</p>
+                                                <p className="text-2xl font-serif text-green-400">${formatearMoneda(stats.valorInventario)}</p>
+                                            </div>
+                                            <div className="text-green-500/30 text-3xl">◈</div>
+                                        </div>
+                                    </div>
+
+                                    <div className="glass rounded-2xl p-6 card-elegant border-l-2 border-orange-500">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <p className="text-glimmer-rose text-xs uppercase tracking-widest mb-2">Stock Bajo</p>
+                                                <p className="text-3xl font-serif text-orange-400">{stats.stockBajo}</p>
+                                            </div>
+                                            <div className="text-orange-500/30 text-3xl">◉</div>
+                                        </div>
+                                    </div>
+
+                                    <div className="glass rounded-2xl p-6 card-elegant border-l-2 border-red-500">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <p className="text-glimmer-rose text-xs uppercase tracking-widest mb-2">Agotados</p>
+                                                <p className="text-3xl font-serif text-red-400">{stats.agotados}</p>
+                                            </div>
+                                            <div className="text-red-500/30 text-3xl">◆</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {(stats.stockBajo > 0 || stats.agotados > 0) && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {stats.stockBajo > 0 && (
+                                            <div className="glass rounded-2xl p-6 border border-orange-500/20">
+                                                <h3 className="font-serif text-xl text-orange-300 mb-4 flex items-center gap-2">
+                                                    <span>◉</span> Stock Bajo
+                                                </h3>
+                                                <div className="space-y-3 max-h-64 overflow-y-auto">
+                                                    {productos.filter(p => p.stock <= p.stockMinimo && p.stock > 0).map(producto => (
+                                                        <div key={producto.id} className="flex justify-between items-center p-3 bg-orange-900/20 rounded-lg border border-orange-500/10">
+                                                            <div>
+                                                                <p className="font-medium text-glimmer-pearl">{producto.nombre}</p>
+                                                                <p className="text-xs text-glimmer-rose">Código: {producto.codigo}</p>
+                                                            </div>
+                                                            <div className="text-right">
+                                                                <p className="text-orange-400 font-bold">{producto.stock} <span className="text-xs font-normal text-glimmer-rose">/ {producto.stockMinimo} min</span></p>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {stats.agotados > 0 && (
+                                            <div className="glass rounded-2xl p-6 border border-red-500/20">
+                                                <h3 className="font-serif text-xl text-red-300 mb-4 flex items-center gap-2">
+                                                    <span>◆</span> Agotados
+                                                </h3>
+                                                <div className="space-y-3 max-h-64 overflow-y-auto">
+                                                    {productos.filter(p => p.stock === 0).map(producto => (
+                                                        <div key={producto.id} className="flex justify-between items-center p-3 bg-red-900/20 rounded-lg border border-red-500/10">
+                                                            <div>
+                                                                <p className="font-medium text-glimmer-pearl">{producto.nombre}</p>
+                                                                <p className="text-xs text-glimmer-rose">{producto.proveedor}</p>
+                                                            </div>
+                                                            <span className="px-3 py-1 bg-red-500/20 text-red-300 text-xs rounded-full uppercase tracking-wider">Agotado</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {vistaActual === 'productos' && (
+                            <div className="space-y-6 animate-fade-in">
+                                <div className="flex justify-between items-center">
+                                    <h2 className="font-serif text-3xl text-gradient-gold">Gestión de Productos</h2>
+                                    <button
+                                        onClick={() => setMostrarFormulario(!mostrarFormulario)}
+                                        className="btn-primary px-6 py-3 rounded-lg text-sm uppercase tracking-wider flex items-center gap-2 glow-gold"
+                                    >
+                                        {mostrarFormulario ? '✕ Cancelar' : '+ Nuevo Producto'}
+                                    </button>
+                                </div>
+
+                                {mostrarFormulario && (
+                                    <div className="glass rounded-2xl p-8 border border-glimmer-gold/20 animate-fade-in">
+                                        <h3 className="font-serif text-2xl text-glimmer-pearl mb-6">
+                                            {productoEditando ? 'Editar Producto' : 'Nuevo Producto'}
+                                        </h3>
+                                        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Nombre *</label>
+                                                <input type="text" required value={formulario.nombre} onChange={(e) => setFormulario({...formulario, nombre: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" placeholder="Nombre del producto" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Código *</label>
+                                                <input type="text" required value={formulario.codigo} onChange={(e) => setFormulario({...formulario, codigo: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" placeholder="SKU-001" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Categoría *</label>
+                                                <select required value={formulario.categoria} onChange={(e) => setFormulario({...formulario, categoria: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl bg-transparent">
+                                                    <option value="" className="bg-glimmer-charcoal">Seleccionar...</option>
+                                                    {categorias.map(cat => <option key={cat} value={cat} className="bg-glimmer-charcoal">{cat}</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Precio Venta *</label>
+                                                <input type="number" step="0.01" required value={formulario.precio} onChange={(e) => setFormulario({...formulario, precio: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" placeholder="0.00" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Costo *</label>
+                                                <input type="number" step="0.01" required value={formulario.costo} onChange={(e) => setFormulario({...formulario, costo: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" placeholder="0.00" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Stock *</label>
+                                                <input type="number" required value={formulario.stock} onChange={(e) => setFormulario({...formulario, stock: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" placeholder="0" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Stock Mínimo *</label>
+                                                <input type="number" required value={formulario.stockMinimo} onChange={(e) => setFormulario({...formulario, stockMinimo: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" placeholder="0" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Proveedor</label>
+                                                <input type="text" value={formulario.proveedor} onChange={(e) => setFormulario({...formulario, proveedor: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" placeholder="Proveedor" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Ubicación</label>
+                                                <input type="text" value={formulario.ubicacion} onChange={(e) => setFormulario({...formulario, ubicacion: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" placeholder="Estante A-1" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Sabor/Aroma</label>
+                                                <input type="text" value={formulario.sabor} onChange={(e) => setFormulario({...formulario, sabor: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" placeholder="Fresa, Vainilla..." />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Material</label>
+                                                <input type="text" value={formulario.material} onChange={(e) => setFormulario({...formulario, material: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" placeholder="Silicona, Encaje..." />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Talla/Tamaño</label>
+                                                <input type="text" value={formulario.talla} onChange={(e) => setFormulario({...formulario, talla: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" placeholder="S, M, L, 50ml..." />
+                                            </div>
+                                            <div className="md:col-span-2 lg:col-span-3 space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Descripción</label>
+                                                <textarea value={formulario.descripcion} onChange={(e) => setFormulario({...formulario, descripcion: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" rows="3" placeholder="Descripción detallada del producto..."></textarea>
+                                            </div>
+                                            <div className="md:col-span-2 lg:col-span-3 flex gap-4">
+                                                <button type="submit" className="btn-primary px-8 py-3 rounded-lg text-sm uppercase tracking-wider glow-gold">
+                                                    {productoEditando ? 'Guardar Cambios' : 'Crear Producto'}
+                                                </button>
+                                                <button type="button" onClick={resetFormulario} className="px-8 py-3 rounded-lg text-sm uppercase tracking-wider border border-glimmer-rose/30 text-glimmer-rose hover:bg-glimmer-rose/10 transition">
+                                                    Cancelar
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                )}
+
+                                <div className="glass rounded-2xl p-6 border border-glimmer-gold/10">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div className="space-y-2">
+                                            <label className="text-xs uppercase tracking-widest text-glimmer-rose">Buscar</label>
+                                            <input type="text" value={busqueda} onChange={(e) => setBusqueda(e.target.value)} className="w-full px-4 py-2 input-elegant rounded-lg text-glimmer-pearl text-sm" placeholder="Nombre, código..." />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs uppercase tracking-widest text-glimmer-rose">Categoría</label>
+                                            <select value={filtroCategoria} onChange={(e) => setFiltroCategoria(e.target.value)} className="w-full px-4 py-2 input-elegant rounded-lg text-glimmer-pearl text-sm bg-transparent">
+                                                <option value="todas" className="bg-glimmer-charcoal">Todas</option>
+                                                {categorias.map(cat => <option key={cat} value={cat} className="bg-glimmer-charcoal">{cat}</option>)}
+                                            </select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs uppercase tracking-widest text-glimmer-rose">Estado Stock</label>
+                                            <select value={filtroStock} onChange={(e) => setFiltroStock(e.target.value)} className="w-full px-4 py-2 input-elegant rounded-lg text-glimmer-pearl text-sm bg-transparent">
+                                                <option value="todos" className="bg-glimmer-charcoal">Todos</option>
+                                                <option value="disponible" className="bg-glimmer-charcoal">Disponible</option>
+                                                <option value="bajo" className="bg-glimmer-charcoal">Stock Bajo</option>
+                                                <option value="agotado" className="bg-glimmer-charcoal">Agotado</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="glass rounded-2xl overflow-hidden border border-glimmer-gold/10">
+                                    <div className="p-6 border-b border-glimmer-gold/10">
+                                        <h3 className="font-serif text-xl text-glimmer-pearl">
+                                            Productos <span className="text-glimmer-rose text-sm">({productosFiltrados.length})</span>
+                                        </h3>
+                                    </div>
+                                    
+                                    {productosFiltrados.length === 0 ? (
+                                        <div className="p-12 text-center">
+                                            <div className="text-4xl mb-4 text-glimmer-gold/30">✦</div>
+                                            <p className="text-glimmer-rose text-lg font-light">No hay productos para mostrar</p>
+                                            <p className="text-gray-600 text-sm mt-2">Comienza agregando tu primer producto</p>
+                                        </div>
+                                    ) : (
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full">
+                                                <thead className="bg-glimmer-burgundy/20">
+                                                    <tr>
+                                                        <th className="px-6 py-4 text-left text-xs uppercase tracking-widest text-glimmer-rose font-medium">Código</th>
+                                                        <th className="px-6 py-4 text-left text-xs uppercase tracking-widest text-glimmer-rose font-medium">Producto</th>
+                                                        <th className="px-6 py-4 text-left text-xs uppercase tracking-widest text-glimmer-rose font-medium">Categoría</th>
+                                                        <th className="px-6 py-4 text-left text-xs uppercase tracking-widest text-glimmer-rose font-medium">Precio</th>
+                                                        <th className="px-6 py-4 text-left text-xs uppercase tracking-widest text-glimmer-rose font-medium">Stock</th>
+                                                        <th className="px-6 py-4 text-left text-xs uppercase tracking-widest text-glimmer-rose font-medium">Valor</th>
+                                                        <th className="px-6 py-4 text-left text-xs uppercase tracking-widest text-glimmer-rose font-medium">Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-glimmer-gold/5">
+                                                    {productosFiltrados.map(producto => {
+                                                        const margen = ((producto.precio - producto.costo) / producto.precio * 100).toFixed(1);
+                                                        const valorTotal = producto.precio * producto.stock;
+                                                        const stockStatus = producto.stock === 0 ? 'agotado' : producto.stock <= producto.stockMinimo ? 'bajo' : 'ok';
+                                                        
+                                                        return (
+                                                            <tr key={producto.id} className="hover:bg-white/5 transition">
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <span className="text-sm font-mono text-glimmer-gold">{producto.codigo}</span>
+                                                                </td>
+                                                                <td className="px-6 py-4">
+                                                                    <div>
+                                                                        <div className="font-medium text-glimmer-pearl">{producto.nombre}</div>
+                                                                        <div className="text-xs text-glimmer-rose mt-1 space-x-2">
+                                                                            {producto.sabor && <span>• {producto.sabor}</span>}
+                                                                            {producto.material && <span>• {producto.material}</span>}
+                                                                            {producto.talla && <span>• {producto.talla}</span>}
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <span className="px-3 py-1 text-xs rounded-full bg-glimmer-burgundy/30 text-glimmer-rose border border-glimmer-burgundy/30">
+                                                                        {producto.categoria}
+                                                                    </span>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <div className="text-glimmer-pearl font-medium">${formatearMoneda(producto.precio)}</div>
+                                                                    <div className="text-xs text-glimmer-rose">Costo: ${formatearMoneda(producto.costo)}</div>
+                                                                    <div className="text-xs text-green-400">{margen}% margen</div>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <div className="flex items-center gap-3">
+                                                                        <span className={`text-lg font-serif ${
+                                                                            stockStatus === 'agotado' ? 'text-red-400' :
+                                                                            stockStatus === 'bajo' ? 'text-orange-400' : 'text-green-400'
+                                                                        }`}>
+                                                                            {producto.stock}
+                                                                        </span>
+                                                                        <div className="flex flex-col gap-1">
+                                                                            <button onClick={() => actualizarStock(producto.id, 1)} className="w-6 h-6 flex items-center justify-center bg-green-500/20 text-green-400 rounded hover:bg-green-500/30 text-xs">+</button>
+                                                                            <button onClick={() => actualizarStock(producto.id, -1)} className="w-6 h-6 flex items-center justify-center bg-red-500/20 text-red-400 rounded hover:bg-red-500/30 text-xs">-</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <span className="text-glimmer-gold font-medium">${formatearMoneda(valorTotal)}</span>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <div className="flex gap-3">
+                                                                        <button onClick={() => editarProducto(producto)} className="text-glimmer-gold hover:text-glimmer-gold-light text-sm transition">Editar</button>
+                                                                        <button onClick={() => eliminarProducto(producto.id)} className="text-red-400 hover:text-red-300 text-sm transition">Eliminar</button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        );
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {vistaActual === 'contabilidad' && (
+                            <div className="space-y-6 animate-fade-in">
+                                <div className="flex justify-between items-center">
+                                    <h2 className="font-serif text-3xl text-gradient-gold">Contabilidad</h2>
+                                    <div className="flex gap-3">
+                                        <button onClick={() => setMostrarFormTransaccion(!mostrarFormTransaccion)} className="btn-primary px-6 py-3 rounded-lg text-sm uppercase tracking-wider glow-gold">
+                                            {mostrarFormTransaccion ? '✕ Cancelar' : '+ Transacción'}
+                                        </button>
+                                        <button onClick={realizarCierreMensual} className="px-6 py-3 rounded-lg text-sm uppercase tracking-wider border border-glimmer-gold/30 text-glimmer-gold hover:bg-glimmer-gold/10 transition">
+                                            Cerrar Mes
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    <div className="glass rounded-2xl p-6 card-elegant border-l-2 border-green-500">
+                                        <p className="text-xs uppercase tracking-widest text-glimmer-rose mb-2">Ingresos Totales</p>
+                                        <p className="text-2xl font-serif text-green-400">${formatearMoneda(statsFinancieras.totalIngresos)}</p>
+                                    </div>
+                                    <div className="glass rounded-2xl p-6 card-elegant border-l-2 border-red-500">
+                                        <p className="text-xs uppercase tracking-widest text-glimmer-rose mb-2">Egresos Totales</p>
+                                        <p className="text-2xl font-serif text-red-400">${formatearMoneda(statsFinancieras.totalEgresos)}</p>
+                                    </div>
+                                    <div className="glass rounded-2xl p-6 card-elegant border-l-2 border-glimmer-gold">
+                                        <p className="text-xs uppercase tracking-widest text-glimmer-rose mb-2">Utilidad Neta</p>
+                                        <p className={`text-2xl font-serif ${statsFinancieras.utilidadNeta >= 0 ? 'text-glimmer-gold' : 'text-red-400'}`}>
+                                            ${formatearMoneda(statsFinancieras.utilidadNeta)}
+                                        </p>
+                                    </div>
+                                    <div className="glass rounded-2xl p-6 card-elegant border-l-2 border-blue-500">
+                                        <p className="text-xs uppercase tracking-widest text-glimmer-rose mb-2">Ventas Hoy</p>
+                                        <p className="text-2xl font-serif text-blue-400">${formatearMoneda(statsFinancieras.ventasHoy)}</p>
+                                    </div>
+                                </div>
+
+                                {mostrarFormTransaccion && (
+                                    <div className="glass rounded-2xl p-8 border border-glimmer-gold/20 animate-fade-in">
+                                        <h3 className="font-serif text-2xl text-glimmer-pearl mb-6">
+                                            {transaccionEditando ? 'Editar Transacción' : 'Nueva Transacción'}
+                                        </h3>
+                                        <form onSubmit={handleSubmitTransaccion} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Tipo *</label>
+                                                <select required value={formTransaccion.tipo} onChange={(e) => setFormTransaccion({...formTransaccion, tipo: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl bg-transparent">
+                                                    <option value="venta" className="bg-glimmer-charcoal">Venta/Ingreso</option>
+                                                    <option value="ingreso" className="bg-glimmer-charcoal">Otro Ingreso</option>
+                                                    <option value="gasto" className="bg-glimmer-charcoal">Gasto</option>
+                                                    <option value="compra" className="bg-glimmer-charcoal">Compra Inventario</option>
+                                                </select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Categoría *</label>
+                                                <select required value={formTransaccion.categoria} onChange={(e) => setFormTransaccion({...formTransaccion, categoria: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl bg-transparent">
+                                                    <option value="" className="bg-glimmer-charcoal">Seleccionar...</option>
+                                                    {(formTransaccion.tipo === 'venta' || formTransaccion.tipo === 'ingreso' ? categorias : categoriasGastos).map(cat => (
+                                                        <option key={cat} value={cat} className="bg-glimmer-charcoal">{cat}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Monto *</label>
+                                                <input type="number" step="0.01" required value={formTransaccion.monto} onChange={(e) => setFormTransaccion({...formTransaccion, monto: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" placeholder="0.00" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Fecha *</label>
+                                                <input type="date" required value={formTransaccion.fecha} onChange={(e) => setFormTransaccion({...formTransaccion, fecha: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Método de Pago</label>
+                                                <select value={formTransaccion.metodoPago} onChange={(e) => setFormTransaccion({...formTransaccion, metodoPago: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl bg-transparent">
+                                                    <option value="" className="bg-glimmer-charcoal">Seleccionar...</option>
+                                                    {metodosPago.map(m => <option key={m} value={m} className="bg-glimmer-charcoal">{m}</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Referencia</label>
+                                                <input type="text" value={formTransaccion.referencia} onChange={(e) => setFormTransaccion({...formTransaccion, referencia: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" placeholder="#12345" />
+                                            </div>
+                                            {formTransaccion.tipo === 'venta' && (
+                                                <>
+                                                    <div className="space-y-2">
+                                                        <label className="text-xs uppercase tracking-widest text-glimmer-rose">Cliente</label>
+                                                        <input type="text" value={formTransaccion.cliente} onChange={(e) => setFormTransaccion({...formTransaccion, cliente: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" placeholder="Nombre cliente" />
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <label className="text-xs uppercase tracking-widest text-glimmer-rose">Producto</label>
+                                                        <select value={formTransaccion.productoId} onChange={(e) => setFormTransaccion({...formTransaccion, productoId: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl bg-transparent">
+                                                            <option value="" className="bg-glimmer-charcoal">Seleccionar...</option>
+                                                            {productos.map(p => <option key={p.id} value={p.id} className="bg-glimmer-charcoal">{p.nombre} - ${formatearMoneda(p.precio)}</option>)}
+                                                        </select>
+                                                    </div>
+                                                </>
+                                            )}
+                                            <div className="md:col-span-2 lg:col-span-3 space-y-2">
+                                                <label className="text-xs uppercase tracking-widest text-glimmer-rose">Descripción *</label>
+                                                <textarea required value={formTransaccion.descripcion} onChange={(e) => setFormTransaccion({...formTransaccion, descripcion: e.target.value})} className="w-full px-4 py-3 input-elegant rounded-lg text-glimmer-pearl" rows="3" placeholder="Descripción de la transacción..."></textarea>
+                                            </div>
+                                            <div className="md:col-span-2 lg:col-span-3 flex gap-4">
+                                                <button type="submit" className="btn-primary px-8 py-3 rounded-lg text-sm uppercase tracking-wider glow-gold">
+                                                    {transaccionEditando ? 'Guardar Cambios' : 'Crear Transacción'}
+                                                </button>
+                                                <button type="button" onClick={resetFormTransaccion} className="px-8 py-3 rounded-lg text-sm uppercase tracking-wider border border-glimmer-rose/30 text-glimmer-rose hover:bg-glimmer-rose/10 transition">
+                                                    Cancelar
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                )}
+
+                                <div className="glass rounded-2xl p-6 border border-glimmer-gold/10">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs uppercase tracking-widest text-glimmer-rose">Tipo</label>
+                                            <select value={filtroTipoTransaccion} onChange={(e) => setFiltroTipoTransaccion(e.target.value)} className="w-full px-4 py-2 input-elegant rounded-lg text-glimmer-pearl text-sm bg-transparent">
+                                                <option value="todas" className="bg-glimmer-charcoal">Todas</option>
+                                                <option value="venta" className="bg-glimmer-charcoal">Ventas</option>
+                                                <option value="ingreso" className="bg-glimmer-charcoal">Ingresos</option>
+                                                <option value="gasto" className="bg-glimmer-charcoal">Gastos</option>
+                                                <option value="compra" className="bg-glimmer-charcoal">Compras</option>
+                                            </select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs uppercase tracking-widest text-glimmer-rose">Desde</label>
+                                            <input type="date" value={filtroFechaDesde} onChange={(e) => setFiltroFechaDesde(e.target.value)} className="w-full px-4 py-2 input-elegant rounded-lg text-glimmer-pearl text-sm" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs uppercase tracking-widest text-glimmer-rose">Hasta</label>
+                                            <input type="date" value={filtroFechaHasta} onChange={(e) => setFiltroFechaHasta(e.target.value)} className="w-full px-4 py-2 input-elegant rounded-lg text-glimmer-pearl text-sm" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="glass rounded-2xl overflow-hidden border border-glimmer-gold/10">
+                                    <div className="p-6 border-b border-glimmer-gold/10">
+                                        <h3 className="font-serif text-xl text-glimmer-pearl">
+                                            Transacciones <span className="text-glimmer-rose text-sm">({transaccionesFiltradas.length})</span>
+                                        </h3>
+                                    </div>
+                                    
+                                    {transaccionesFiltradas.length === 0 ? (
+                                        <div className="p-12 text-center">
+                                            <div className="text-4xl mb-4 text-glimmer-gold/30">◈</div>
+                                            <p className="text-glimmer-rose text-lg font-light">No hay transacciones registradas</p>
+                                        </div>
+                                    ) : (
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full">
+                                                <thead className="bg-glimmer-burgundy/20">
+                                                    <tr>
+                                                        <th className="px-6 py-4 text-left text-xs uppercase tracking-widest text-glimmer-rose font-medium">Fecha</th>
+                                                        <th className="px-6 py-4 text-left text-xs uppercase tracking-widest text-glimmer-rose font-medium">Tipo</th>
+                                                        <th className="px-6 py-4 text-left text-xs uppercase tracking-widest text-glimmer-rose font-medium">Categoría</th>
+                                                        <th className="px-6 py-4 text-left text-xs uppercase tracking-widest text-glimmer-rose font-medium">Descripción</th>
+                                                        <th className="px-6 py-4 text-left text-xs uppercase tracking-widest text-glimmer-rose font-medium">Método</th>
+                                                        <th className="px-6 py-4 text-left text-xs uppercase tracking-widest text-glimmer-rose font-medium">Monto</th>
+                                                        <th className="px-6 py-4 text-left text-xs uppercase tracking-widest text-glimmer-rose font-medium">Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-glimmer-gold/5">
+                                                    {transaccionesFiltradas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).map(transaccion => {
+                                                        const esIngreso = transaccion.tipo === 'venta' || transaccion.tipo === 'ingreso';
+                                                        const producto = transaccion.productoId ? productos.find(p => p.id === parseInt(transaccion.productoId)) : null;
+                                                        
+                                                        return (
+                                                            <tr key={transaccion.id} className="hover:bg-white/5 transition">
+                                                                <td className="px-6 py-4 whitespace-nowrap text-glimmer-pearl">
+                                                                    {new Date(transaccion.fecha).toLocaleDateString('es-ES')}
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <span className={`px-3 py-1 text-xs rounded-full border ${esIngreso ? 'bg-green-500/10 text-green-400 border-green-500/30' : 'bg-red-500/10 text-red-400 border-red-500/30'}`}>
+                                                                        {transaccion.tipo}
+                                                                    </span>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap text-glimmer-rose text-sm">{transaccion.categoria}</td>
+                                                                <td className="px-6 py-4">
+                                                                    <div className="text-glimmer-pearl text-sm">{transaccion.descripcion}</div>
+                                                                    {transaccion.cliente && <div className="text-xs text-glimmer-rose mt-1">Cliente: {transaccion.cliente}</div>}
+                                                                    {producto && <div className="text-xs text-glimmer-gold mt-1">Producto: {producto.nombre}</div>}
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap text-glimmer-rose text-sm">{transaccion.metodoPago || '-'}</td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <span className={`text-lg font-serif font-medium ${esIngreso ? 'text-green-400' : 'text-red-400'}`}>
+                                                                        {esIngreso ? '+' : '-'}${formatearMoneda(transaccion.monto)}
+                                                                    </span>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <div className="flex gap-3">
+                                                                        <button onClick={() => editarTransaccion(transaccion)} className="text-glimmer-gold hover:text-glimmer-gold-light text-sm transition">Editar</button>
+                                                                        <button onClick={() => eliminarTransaccion(transaccion.id)} className="text-red-400 hover:text-red-300 text-sm transition">Eliminar</button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        );
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {vistaActual === 'cierres' && (
+                            <div className="space-y-6 animate-fade-in">
+                                <h2 className="font-serif text-3xl text-gradient-gold">Cierres Mensuales</h2>
+                                
+                                {cierresMensuales.length === 0 ? (
+                                    <div className="glass rounded-2xl p-12 text-center border border-glimmer-gold/10">
+                                        <div className="text-4xl mb-4 text-glimmer-gold/30">◆</div>
+                                        <p className="text-glimmer-rose text-lg font-light">No hay cierres registrados</p>
+                                        <p className="text-gray-600 text-sm mt-2">Los cierres aparecerán aquí al cerrar un mes</p>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-6">
+                                        {cierresMensuales.sort((a, b) => new Date(b.fechaCierre) - new Date(a.fechaCierre)).map(cierre => (
+                                            <div key={cierre.id} className="glass rounded-2xl overflow-hidden border border-glimmer-gold/10">
+                                                <div className="bg-gradient-to-r from-glimmer-burgundy/30 to-glimmer-charcoal p-6 border-b border-glimmer-gold/10">
+                                                    <div className="flex justify-between items-center">
+                                                        <div>
+                                                            <h3 className="font-serif text-2xl text-glimmer-gold capitalize">{cierre.nombreMes}</h3>
+                                                            <p className="text-glimmer-rose text-sm mt-1">
+                                                                Cerrado el {new Date(cierre.fechaCierre).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                                            </p>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <p className="text-xs uppercase tracking-widest text-glimmer-rose">Utilidad Neta</p>
+                                                            <p className={`text-3xl font-serif ${cierre.utilidadNeta >= 0 ? 'text-glimmer-gold' : 'text-red-400'}`}>
+                                                                ${formatearMoneda(cierre.utilidadNeta)}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div className="p-6">
+                                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                                        <div className="glass-light rounded-xl p-4 text-center">
+                                                            <p className="text-xs uppercase tracking-widest text-glimmer-rose mb-1">Ingresos</p>
+                                                            <p className="text-xl font-serif text-green-400">${formatearMoneda(cierre.totalIngresos)}</p>
+                                                        </div>
+                                                        <div className="glass-light rounded-xl p-4 text-center">
+                                                            <p className="text-xs uppercase tracking-widest text-glimmer-rose mb-1">Egresos</p>
+                                                            <p className="text-xl font-serif text-red-400">${formatearMoneda(cierre.totalEgresos)}</p>
+                                                        </div>
+                                                        <div className="glass-light rounded-xl p-4 text-center">
+                                                            <p className="text-xs uppercase tracking-widest text-glimmer-rose mb-1">Transacciones</p>
+                                                            <p className="text-xl font-serif text-glimmer-pearl">{cierre.cantidadTransacciones}</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <button onClick={() => setMostrarCierres(mostrarCierres === cierre.id ? null : cierre.id)} className="w-full py-3 rounded-lg border border-glimmer-gold/20 text-glimmer-gold hover:bg-glimmer-gold/10 transition text-sm uppercase tracking-wider">
+                                                        {mostrarCierres === cierre.id ? 'Ocultar Detalles' : 'Ver Detalles'}
+                                                    </button>
+
+                                                    {mostrarCierres === cierre.id && (
+                                                        <div className="mt-6 space-y-6 animate-fade-in">
+                                                            {Object.keys(cierre.ventasPorCategoria).length > 0 && (
+                                                                <div>
+                                                                    <h4 className="font-serif text-lg text-glimmer-pearl mb-3">Ventas por Categoría</h4>
+                                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                                        {Object.entries(cierre.ventasPorCategoria).sort((a, b) => b[1] - a[1]).map(([cat, monto]) => (
+                                                                            <div key={cat} className="flex justify-between items-center glass-light p-3 rounded-lg">
+                                                                                <span className="text-glimmer-rose text-sm">{cat}</span>
+                                                                                <span className="font-medium text-glimmer-gold">${formatearMoneda(monto)}</span>
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+
+                                                            {cierre.productosMasVendidos && cierre.productosMasVendidos.length > 0 && (
+                                                                <div>
+                                                                    <h4 className="font-serif text-lg text-glimmer-pearl mb-3">Top Productos</h4>
+                                                                    <div className="overflow-x-auto">
+                                                                        <table className="w-full">
+                                                                            <thead className="bg-glimmer-burgundy/20">
+                                                                                <tr>
+                                                                                    <th className="px-4 py-2 text-left text-xs uppercase text-glimmer-rose">#</th>
+                                                                                    <th className="px-4 py-2 text-left text-xs uppercase text-glimmer-rose">Producto</th>
+                                                                                    <th className="px-4 py-2 text-left text-xs uppercase text-glimmer-rose">Cantidad</th>
+                                                                                    <th className="px-4 py-2 text-left text-xs uppercase text-glimmer-rose">Total</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody className="divide-y divide-glimmer-gold/5">
+                                                                                {cierre.productosMasVendidos.map((prod, index) => (
+                                                                                    <tr key={index}>
+                                                                                        <td className="px-4 py-3 text-glimmer-pearl">{index + 1}</td>
+                                                                                        <td className="px-4 py-3 text-glimmer-pearl">{prod.nombre}</td>
+                                                                                        <td className="px-4 py-3 text-blue-400">{prod.cantidad}</td>
+                                                                                        <td className="px-4 py-3 text-green-400">${formatearMoneda(prod.total)}</td>
+                                                                                    </tr>
+                                                                                ))}
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </main>
+
+                    <footer className="glass border-t border-glimmer-gold/10 mt-12">
+                        <div className="container mx-auto px-4 py-8">
+                            <div className="text-center">
+                                <p className="font-serif text-glimmer-gold/50 text-lg italic mb-2">Glimmer</p>
+                                <p className="text-xs text-glimmer-rose/60 tracking-widest uppercase">Bienestar Íntimo & Cuidado Corporal</p>
+                                <div className="mt-4 w-16 h-px bg-gradient-to-r from-transparent via-glimmer-gold/30 to-transparent mx-auto"></div>
+                                <p className="text-xs text-gray-600 mt-4">© 2024 Todos los derechos reservados</p>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<InventarioGlimmer />, document.getElementById('root'));
+    </script>
+</body>
+</html>
